@@ -1,0 +1,170 @@
+<div id='maze'>
+
+</div>
+
+<div>
+    <!-- <button (click)='testMazes()'>Test Mazes</button> -->
+    <select (change)='generateMaze(generator.value, boardLen.value)' name="generator" id="generator" #generator>
+        <option value="rb">Recursive Backtracking</option>        
+        <option value="hak">Hunt and Kill</option>
+        <option value="abv0">Aldous-Broder Algorithm</option>
+        <option value="ea">Eller's Algorithm</option>
+        <option value="eav">Eller's Algorithm (Vertical)</option>
+        <option value="eah">Eller's Algorithm (Horizontal)</option>
+        <option value="ka">Kruskal's Algorithm</option>
+        <option value="pa">Prim's Algorithm</option>
+        <option value="rds">Recursive Division (Squares)</option>
+        <option value="rdc">Recursive Division (Corridors)</option>
+        <option value="wa">Wilson's Algorithm</option>
+        <option value="gt">Growing Tree Algorithm</option>
+        <option value="bt">Binary Tree Algorithm</option>
+        <option value="sw">Sidewinder Algorithm</option>
+    </select>
+    <select (change)='generateMaze(generator.value, boardLen.value)' name="boardLen" id="boardLen" #boardLen>
+        <option value='3'>3</option>
+        <option value='4'>4</option>
+        <option value='5'>5</option>
+        <option value='6'>6</option>
+        <option value='7'>7</option>
+        <option value='8'>8</option>
+        <option value='9'>9</option>
+        <option value='10'>10</option>
+        <option value='11'>11</option>
+        <option selected value='12'>12</option>
+        <option value='13'>13</option>
+        <option value='14'>14</option>
+        <option value='15'>15</option>
+        <option value='16'>16</option>
+    </select>
+    <button (click)='generateMaze(generator.value, boardLen.value)'>Generate Maze</button>
+    <button (click)='getLongestPath(1)'>Play Maze</button>
+    <!-- <button (click)='stopSolve()'>Stop solve</button> -->
+</div>
+
+<div id='maze-stats' class="stats-desc">
+   <h1>Maze Stats</h1>
+
+   <p>I implemented and tested 11 different maze generations algorithms from Jamis Buck's <a target='blank' href="https://weblog.jamisbuck.org/">blog.</a>
+    Each maze algorithm was tested by generating 1,024 mazes of length 10,20,...,100, resulting in over 100,000 mazes created.
+    Below are the test results as well as a description and analysis of each algorithm.
+    More detailed results can be found on the Google Sheet. <a href="https://docs.google.com/spreadsheets/d/1eOZeLbyZ71mfwEWD8WvFzQsJJelZd2vRKr_H5JOWLxQ/edit?usp=sharing" target="blank">Link</a>.</p>
+
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/gentimes.png" alt="">
+    <p>The generation times are separated into 3 tiers, which roughly correspond with the type of generation algorithm.
+        For example the slower ones are random walks, the middle ones are path carvers, and the fastest ones are single pass algorithms.
+    </p>
+
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/decisions.png" alt="">
+    <p>Decision cells are points in the maze where a decision must be made on what direction to go in.
+        Each maze is roughly 25% decision cells, with the exception of Prim's algorithm which is closer to 30%, and
+        the recursive algorithms which were closer to 10%. 
+    </p>
+    
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/longest.png" alt="">
+    <p>
+        The mazes varied in their longest paths, especially the recursive algorithms which had significantly longer paths.
+        Note that having a longer path was roughly correlated with having less decision cells, which makes sense as long paths will 
+        have long straightaways instead of splitting into different paths.
+    </p>
+
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/maze_composition.png" alt="">
+    <p>The maze composition of each generation algorithm along with the longest path.</p>
+
+   <p class='bold' style='margin-top: 0.5em'>Recursive Backtracking</p>
+    <p>Simple recursive backtracking. Start at a random cell, move to an unvisited neighbour. 
+    If all the neighbours are visited, backtrack until you can move to an unvisited cell.
+    Do this until all of the cells have been visited. Generation time and longest path grew quadratically.</p>
+
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/recursive.png" alt="">
+
+   <p class='bold'>Hunt and Kill</p>
+   <p>
+    This was a pretty easy one to implement as it was similar to recursive backtracking. Start at a random cell and move to an unvisited neighbour until you 
+    reach a cell with no unvisited neighbours. Then scan the board from left to right, top to bottom until you're at a cell with a visited neighbour. Remove the wall
+    between these two cells, and then continue with moving to unvisited neighbours. Repeat this process until all of the cells have been visited. Generation time grew quadratically but longest path only grew linearly!
+   </p>
+
+   <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/hak.png" alt="">
+  
+   <p class='bold'>Aldous-Broder Algorithm</p>
+   <p>This was the first one I implemented because it was so simple and straightforward. Start at a random cell and mark it as visited. Move to a random neighbour cell. 
+       If that cell has already been visited, then just move to the cell. If that cell has not been visited, then move to the cell and remove the wall between them.
+       This process is repeated until every cell in the maze has been visited. Again, generation time grew quadratically but longest path only grew linearly.
+
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/abv0.png" alt="">
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/abv1.png" alt="">
+
+   </p>
+
+   <p class='bold'>Eller's Algorithm</p>
+   <p>This one was sort of tricky to implement. Start at the top and go row by row. Split each row into connected pieces randomly.
+    Then make at least one path down to the next row from each connected piece.</p>
+
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/ellers.png" alt="">
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/eav.png" alt="">
+    <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/eah.png" alt="">
+
+   <p class='bold'>Kruskal's Algorithm</p>
+   <p>
+    Kruskal's algorithm is a well known CS algorithm that finds a minimum spanning tree in a connected graph, which is exactly what a maze is. It starts by assigning each cell its own value.
+    Then it randomly picks two adjacent cells that do not have the same value. It removes the wall between these two cells, and gives all the connected cells one of the values. This is repeated
+    until every cell in the maze has the same value.
+   </p>
+
+   <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/kruskals.png" alt="">
+
+   <p class='bold'>Prim's Algorithm</p>
+   <p>
+    Prim's algorithm is another well known CS algorithm that finds a minimum spanning tree in an undirected graph, which again is what a maze is. It works by choosing a cell at random 
+    and adding its neighbours to a list of potential moves. Then it picks one of these potential moves, moves to that cell, and adds its neighbours to the potential moves list.
+    This is repeated until all cells have been visited.
+   </p>
+
+   <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/prims.png" alt="">
+  
+   <p class='bold'>Recursive Division</p>
+   <p>This one was interesting because it generates mazes differently than the rest. Instead of breaking down walls to create paths, the algorithm starts by splitting the board
+       into two regions separated by a wall, and creates one opening in the wall. Then it chooses another region, divides it into two and creats an opening between them. This process
+       is repeated until there are no more regions to divide.
+   </p>
+
+   <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/division.png" alt="">
+
+   <p class='bold'>Wilson's Algorithm</p>
+   <p>
+    This one was fun to implement. First, it marks a random cell as visited. Then it picks another random cell to start at. From here it moves to a neighbour, marking the direction
+    that it moved away from this cell. If it moves to a cell that has already been marked with a direction, then the most recent direction is used. This process is repeated until it reaches 
+    a visited cell. Then it will go back to the cell it picked to start at, and create a path from this cell to the visited cell using the directions it left marked
+    in the first stage of the algorithm. After this, it will pick another cell randomly to start marking directions from. This is done until all the cells in the maze have been visited. 
+   </p>
+
+   <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/wilsons.png" alt="">
+  
+   <p class='bold'>Growing Tree Algorithm</p>
+   <p> 
+    This one is interesting because it can be tweaked to behave like different algorithms such as recursive backtracking or Prim's algorithm. It works by first picking an empty cell, marking
+    it as visited and adding it to a list of active cells. Then it picks a cell from the active cells list, moves to an unvisited neighbour by removing the wall between the two cells and
+    adding the neighbour to the list of active cells. If a cell chosen from the active cells list has no unvisited neighbours, then it is removed from the active cells list. This process
+    is repeated until the active cells list is empty. The way this algorithm can be tweaked to behave like other algorithms is based on how the cell from the active list is chosen.
+    If the newest added cell is chosen, then it behaves as the recursive backtracker would. If it chooses an active cell at random, then it behaves like Prim's algorithm.
+   </p>
+
+   <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/growing.png" alt="">
+   
+   <p class='bold'>Binary Tree Algorithm</p>
+   <p>
+    This algorithm is by far the simplest and most straightforward one there is. For each cell, randomly remove a wall with either the cell below or to the right. The only problem with
+    algorithm is that it produces mazes that have corridors in the last row and column.
+   </p>
+
+   <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/binary.png" alt="">
+
+   <p class='bold'>Sidewinder Algorithm</p>
+   <p>
+    Create a corridor in the first row. Then start at the second row and go down to the last row. FOr each row, randomly split the it into connected pieces. For each connected piece in the row, create 1 path to the row above
+    by removing a wall between two cells. This algorith is similar to Eller's algorithm but was a bit easier to implement.
+   </p>
+
+   <img src="https://gitlab.com/rileythomp14/solvers-generators/-/raw/master/mazes/sidewinder.png" alt="">
+
+</div>

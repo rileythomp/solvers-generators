@@ -1,0 +1,84 @@
+<p style='margin: 1em'>I've created 5 different sudoku solvers, each using a different combination of solving techniques. <br>
+    These are brief descriptions and results of each solver run on 3000 sudoku boards of varying difficulty. <br>
+    More detailed results of the solver tests can be found on this Google Sheet. <a target='blank' href="https://docs.google.com/spreadsheets/d/1tHCD08ERWCU1J68tiZQDC-PQI2rvgpKuQFDB39EXgCw/edit?usp=sharing">Link</a>.</p>
+<p style='margin: 1em'>NB: The average solve times are much higher than the median solve times due to outliers, and the times are heavily skewed towards the median.</p>
+
+<hr>
+
+<img src='https://docs.google.com/spreadsheets/d/e/2PACX-1vTEMS8dsML6NKs2_hk0BZb1qDZ62Zo_td38U7w6RKF8-VSOnJBYJZsHr0YJgbaFNQQn7JElmprLM_of/pubchart?oid=1472206235&format=image'>
+<p class='solver-caption'>Median: 0.51 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Average: 37.34  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Max: 11:07:12</p>
+<div>
+    <p>The first solver. It's just a naive implemenation of a recursive backtrack to solve the board. <br>
+         This solver has a very slow median solve time of 0.51 seconds, and an extremely long maximum solve time of over 11 hours!</p>
+</div>
+
+<hr>
+
+<img src='https://docs.google.com/spreadsheets/d/e/2PACX-1vTEMS8dsML6NKs2_hk0BZb1qDZ62Zo_td38U7w6RKF8-VSOnJBYJZsHr0YJgbaFNQQn7JElmprLM_of/pubchart?oid=1530479283&format=image'>
+<p class='solver-caption'>Median: 0.10 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Average: 25.04  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Max: 11:11:40</p>
+<div>
+    <p>The second solver. This one has 2 steps:</p>
+    <ol>
+        <li>Determines each cell's possibilities by making logical deductions by checking it's row, column and box, and fill it in if there's only 1 possibility.</li>
+        <li>Recursively backtrack to solve the rest of the board.</li>
+    </ol>
+    <p>This is much faster than the first solver, with a median solve time of 0.1 seconds, a 5x improvement thanks to the logical deductions.<br>
+         However it still has a very long max solve time of over 11 hours, in the case when there are no deductions possible and it must just backtrack.</p>
+</div>
+
+<hr>
+
+<img src='https://docs.google.com/spreadsheets/d/e/2PACX-1vTEMS8dsML6NKs2_hk0BZb1qDZ62Zo_td38U7w6RKF8-VSOnJBYJZsHr0YJgbaFNQQn7JElmprLM_of/pubchart?oid=80570197&format=image'>
+<p class='solver-caption'>Median: 0.06 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Average: 1.16  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Max: 7:34</p>
+<div>
+    <p>The third solver. This one has 3 steps:</p>
+    <ol>
+        <li>Determines each cell's possibilities by making logical deductions, and fill it in if there's only 1 possibility.</li>
+        <li>If necessary, flip the board so that whichever of the top or bottom half has more cells filled in is at the top, for more efficient backtracking.</li>
+        <li>Recursively backtrack to solve the rest of the board.</li>
+    </ol>
+    <p>Again, this solver is much faster than the previous, with a median solve time of 0.06 seconds, a 40% improvement. <br>
+        Backtracking from the side with more cells filled in really helps at the outliers, shown by the max solve time falling from over 11 hours to less than 8 minutes. </p>
+</div>
+
+<hr>
+
+<img src='https://docs.google.com/spreadsheets/d/e/2PACX-1vTEMS8dsML6NKs2_hk0BZb1qDZ62Zo_td38U7w6RKF8-VSOnJBYJZsHr0YJgbaFNQQn7JElmprLM_of/pubchart?oid=2051768902&format=image'>
+<p class='solver-caption'>Median: 0.03 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Average: 7.03  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Max: 3:13:45</p>
+<div>
+    <p>The fourth solver. This one only has 2 steps: </p>
+    <ol>
+        <li>Determines each cell's possibilities by making logical deductions, and fill it in if there's only 1 possibility.</li>
+        <li>Recursively backtrack to solve the rest of the board, using only the possibilities from the logical deduction to reduce the search space.</li>
+    </ol>
+    <p>This solver has the fastest median solve time so far of 0.03 seconds, a 2x improvement over the prevoius solver. <br>
+        This is thanks to this solver only backtracking with logically possible values instead of trying every number. <br>
+        However, it still has a very large max solve time since it doesn't recursively backtrack from the side with more cells filled in.</p>
+</div>
+
+<hr>
+
+<img src='https://docs.google.com/spreadsheets/d/e/2PACX-1vTEMS8dsML6NKs2_hk0BZb1qDZ62Zo_td38U7w6RKF8-VSOnJBYJZsHr0YJgbaFNQQn7JElmprLM_of/pubchart?oid=907390625&format=image'>
+<p class='solver-caption'>Median: 0.01 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Average: 0.29  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Max: 1:47</p>
+<div>
+    <p>The fifth and fastest solver. This one combines all 3 techniques: </p>
+    <ol>
+        <li>Determines each cell's possibilities by making logical deductions, and fill it in if there's only 1 possibility.</li>
+        <li>If necessary, flip the board so that whichever of the top or bottom half has more cells filled in is at the top, for more efficient backtracking.</li>
+        <li>Recursively backtrack to solve the rest of the board, using only the possibilities from the logical deduction to reduce the search space.</li>
+    </ol>
+    <p>This solver has a very fast median solve time of 0.01 seconds, a 3x improvement over the next fastest solver. <br>
+        It also has by far the lowest max solve time of 1:47, since it will both flip the board and only backtrack with logically possible moves.</p>
+</div>
+
+<hr>
+
+<div>
+    <p>As the results show, the median solve time is reduced by performing logical deductions on the board and only backtracking with logically possible values.</p>
+    <p>This makes sense since it will help to only backtrack with possible values in every board, so the median time goes down. </p>
+    <p>To lower the max and average solve times the recursive backtracking needs to be done from the side that had more cells filled in. <br>
+       By starting on the side with more cells filled in, the solver is more likely reach contradictions early on and need to backtrack. <br>
+       This will greatly reduce the search space compared to not reaching a contradiciton and needing to backtrack until later in the board.</p>
+</div>
+
+<hr>
