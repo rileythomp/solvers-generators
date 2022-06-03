@@ -1,0 +1,6 @@
+[submodule "backend/mazes"]
+	path = backend/mazes
+	url = https://github.com/rileythomp/mazes.git
+[submodule "backend/sudoku"]
+	path = backend/sudoku
+	url = https://github.com/rileythomp/sudoku.git
